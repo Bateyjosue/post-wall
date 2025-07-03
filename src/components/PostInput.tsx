@@ -83,7 +83,7 @@ export default function PostInput({
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           disabled={loading}
-          className="resize-none rounded-none"
+          className="resize-none rounded-md w-full"
         />
         <label className="block">
           <span className="sr-only">Choose file</span>
