@@ -1,6 +1,10 @@
 "use client";
 import { Card } from "@/components/ui/card";
 import ReactMarkdown from "react-markdown";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { MoreVertical } from "lucide-react";
+import { useState } from "react";
+import { supabase } from "../../lib/supabaseClient";
 
 type Post = {
   id: string;
@@ -18,9 +22,27 @@ function isVideo(url: string) {
   return /\.(mp4|webm|ogg)$/i.test(url);
 }
 
-export default function PostItem({ post }: { post: Post }) {
+export default function PostItem({ post, onDelete, onEdit }: { post: Post, onDelete: (id: string) => void, onEdit: (post: Post) => void }) {
+  const handleDelete = async (id: string) => {
+    await supabase.from("posts").delete().eq("id", id);
+    // Optionally, show a toast and update state
+  };
+
   return (
-    <Card className="p-4 rounded-md border bg-white dark:bg-zinc-900 shadow mb-2">
+    <Card className="p-4 rounded-md border bg-white dark:bg-zinc-900 shadow mb-2 relative">
+      <div className="absolute top-2 right-2">
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <button className="p-1 rounded hover:bg-gray-100 dark:hover:bg-zinc-800">
+              <MoreVertical className="w-5 h-5" />
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem onClick={() => onEdit(post)}>Edit</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => onDelete(post.id)} className="text-red-600">Delete</DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
       <div className="flex flex-col gap-2">
         <div className="font-semibold text-gray-900 dark:text-gray-100">
           {post.user_id || "Anonymous"}

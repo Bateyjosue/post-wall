@@ -5,6 +5,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import ReactMarkdown from "react-markdown";
+import { toast } from "sonner";
 
 const MAX_LENGTH = 280;
 const BUCKET = "post-media";
@@ -12,7 +13,7 @@ const BUCKET = "post-media";
 export default function PostInput({
   onPost,
 }: {
-  onPost?: () => void;
+  onPost?: (post: any) => void;
 }) {
   const [message, setMessage] = useState("");
   const [file, setFile] = useState<File | null>(null);
@@ -41,6 +42,7 @@ export default function PostInput({
       if (uploadError) {
         console.error(uploadError);
         setError("Failed to upload photo. Please try again.");
+        toast.error("Failed to upload photo. Please try again.");
         setLoading(false);
         return;
       }
@@ -48,12 +50,18 @@ export default function PostInput({
       media_url = data.publicUrl;
     }
 
-    await supabase.from("posts").insert([{ message, media_url }]);
+    const { data, error: insertError } = await supabase.from("posts").insert([{ message, media_url }]).select().single();
+    if (insertError) {
+      toast.error("Failed to share post.");
+      setLoading(false);
+      return;
+    }
     setMessage("");
     setFile(null);
     if (fileInputRef.current) fileInputRef.current.value = "";
     setLoading(false);
-    onPost?.();
+    toast.success("Your post was shared!");
+    if (onPost && data) onPost(data);
   };
 
   return (
@@ -67,13 +75,23 @@ export default function PostInput({
           disabled={loading}
           className="resize-none rounded-md"
         />
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept="image/*,video/*"
-          onChange={handleFileChange}
-          disabled={loading}
-        />
+        <label className="block">
+          <span className="sr-only">Choose file</span>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*,video/*"
+            onChange={handleFileChange}
+            disabled={loading}
+            className="block w-full text-sm text-gray-500
+              file:mr-4 file:py-2 file:px-4
+              file:rounded-md file:border-0
+              file:text-sm file:font-semibold
+              file:bg-blue-50 file:text-blue-700
+              hover:file:bg-blue-100
+              transition"
+          />
+        </label>
         {error && <div className="text-red-500 text-xs">{error}</div>}
         <div className="flex justify-between items-center">
           <span className={`text-xs ${message.length > MAX_LENGTH ? "text-red-500" : "text-gray-400"}`}>
@@ -100,13 +118,15 @@ export default function PostInput({
           </div>
         )}
         {/* Share Button (below preview, green) */}
-        <Button
-          type="submit"
-          disabled={!message.trim() || message.length > MAX_LENGTH || loading}
-          className="rounded-md bg-green-600 hover:bg-green-700"
-        >
-          {loading ? "Sharing..." : "Share"}
-        </Button>
+        <div className="flex justify-center mt-4">
+          <Button
+            type="submit"
+            disabled={!message.trim() || message.length > MAX_LENGTH || loading}
+            className="rounded-md bg-green-600 hover:bg-green-700 px-8 py-2 text-base font-bold"
+          >
+            {loading ? "Sharing..." : "Share"}
+          </Button>
+        </div>
       </form>
     </Card>
   );
