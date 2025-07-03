@@ -19,10 +19,9 @@ export default function Home() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Fetch posts on mount
+  // Initial fetch
   useEffect(() => {
     const fetchPosts = async () => {
-      setLoading(true);
       const { data, error } = await supabase
         .from("posts")
         .select("*")
@@ -33,6 +32,28 @@ export default function Home() {
     };
     fetchPosts();
   }, []);
+
+  // Background polling (no loading spinner)
+  useEffect(() => {
+    const poll = setInterval(async () => {
+      const { data, error } = await supabase
+        .from("posts")
+        .select("*")
+        .order("created_at", { ascending: false })
+        .limit(50);
+      if (!error && data) {
+        // Only update if there are changes
+        if (
+          data.length !== posts.length ||
+          data.some((post, i) => post.id !== posts[i]?.id)
+        ) {
+          setPosts(data as Post[]);
+        }
+      }
+    }, 2000);
+
+    return () => clearInterval(poll);
+  }, [posts]);
 
   // Optimistically add new post
   const handleAddPost = (newPost: Post) => {
