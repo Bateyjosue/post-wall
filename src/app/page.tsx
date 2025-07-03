@@ -1,10 +1,11 @@
 "use client";
 
-import Sidebar from "@/components/Sidebar";
-import SidebarSheet from "@/components/SidebarSheet";
-import PostFeed from "@/components/PostFeed";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { useState } from "react";
 import PostInput from "@/components/PostInput";
+import PostFeed from "@/components/PostFeed";
+import Sidebar from "@/components/Sidebar";
+import SidebarSheet from "@/components/SidebarSheet";
 
 type Post = {
   id: string;
@@ -21,15 +22,10 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen flex flex-col md:flex-row gap-12 p-6 bg-gray-50 dark:bg-zinc-950">
+    <main className="flex min-h-screen">
       <SidebarSheet />
-      {/* Sidebar on the left (hidden on mobile) */}
-      <aside className="hidden md:block w-80 flex-shrink-0">
-        <Sidebar />
-      </aside>
-      {/* Main wall/feed */}
-      <section className="flex-1 max-w-2xl mx-auto w-full">
-        <h1 className="text-2xl font-bold mb-6 text-gray-900 dark:text-gray-100">News Feed</h1>
+      <section className="flex-1 ml-0 md:ml-80 p-4">
+        <h1 className="pl-12 md:pl-0 text-4xl font-bold mb-6 text-gray-900 dark:text-gray-100">News Feed</h1>
         <PostInput onPost={handleAddPost} />
         <PostFeed />
       </section>

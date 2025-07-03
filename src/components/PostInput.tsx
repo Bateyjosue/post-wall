@@ -73,7 +73,7 @@ export default function PostInput({
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           disabled={loading}
-          className="resize-none rounded-md"
+          className="resize-none rounded-none"
         />
         <label className="block">
           <span className="sr-only">Choose file</span>
@@ -85,7 +85,7 @@ export default function PostInput({
             disabled={loading}
             className="block w-full text-sm text-gray-500
               file:mr-4 file:py-2 file:px-4
-              file:rounded-md file:border-0
+              file:rounded-node file:border-0
               file:text-sm file:font-semibold
               file:bg-blue-50 file:text-blue-700
               hover:file:bg-blue-100
@@ -118,11 +118,11 @@ export default function PostInput({
           </div>
         )}
         {/* Share Button (below preview, green) */}
-        <div className="flex justify-center mt-4">
+        <div className="flex justify-end ">
           <Button
             type="submit"
             disabled={!message.trim() || message.length > MAX_LENGTH || loading}
-            className="rounded-md bg-green-600 hover:bg-green-700 px-8 py-2 text-base font-bold"
+            className="rounded-none bg-green-600 hover:bg-green-700 px-10 py-2 text-base font-bold "
           >
             {loading ? "Sharing..." : "Share"}
           </Button>

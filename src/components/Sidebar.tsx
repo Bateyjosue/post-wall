@@ -13,7 +13,7 @@ const mockUser = {
 export default function Sidebar() {
   return (
     <aside className="sticky top-8 w-full max-w-xs">
-      <Card className="flex flex-col items-center gap-4 p-6 rounded-lg border bg-white dark:bg-zinc-900 shadow">
+      <Card className="flex flex-col items-center gap-4 p-6 border border-none dark:bg-zinc-900 shadow rounded-none">
         <Avatar className="w-16 h-16">
           <AvatarImage src={mockUser.avatar} alt={mockUser.name} />
           <AvatarFallback>
