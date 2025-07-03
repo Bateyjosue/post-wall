@@ -45,7 +45,7 @@ export default function PostItem({ post, onDelete, onEdit }: { post: Post, onDel
       </div>
       <div className="flex flex-col gap-2">
         <div className="font-semibold text-gray-900 dark:text-gray-100">
-          {post.user_id || "Anonymous"}
+          {post.user_id || "Josue Batey"}
         </div>
         <div className="prose dark:prose-invert max-w-none text-gray-700 dark:text-gray-200">
           <ReactMarkdown>

@@ -4,8 +4,8 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { FaEnvelope, FaCalendar } from "react-icons/fa";
 
 const mockUser = {
-  name: "Chad Johnson",
-  email: "chad.johnson@email.com",
+  name: "Josue Batey",
+  email: "jouse.batey@gmain.com",
   avatar: "https://randomuser.me/api/portraits/men/32.jpg",
   joined: "2023-01-15",
 };

@@ -66,15 +66,25 @@ export default function PostFeed({
 
   const handleEditSave = async (updatedMessage: string) => {
     if (!editingPost) return;
+    // Optimistically update local state
+    setPosts((prev) =>
+      prev.map((p) =>
+        p.id === editingPost.id ? { ...p, message: updatedMessage } : p
+      )
+    );
+    setEditingPost(null);
+
     const { error } = await supabase
       .from("posts")
       .update({ message: updatedMessage })
       .eq("id", editingPost.id);
+
     if (error) {
       toast.error("Failed to update post.");
+      // Optionally: revert the optimistic update here if you want
     } else {
       toast.success("Post updated.");
-      setEditingPost(null);
+      // Realtime will keep all tabs in sync
     }
   };
 
