@@ -22,6 +22,7 @@ export default function PostFeed({
   loading: boolean;
 }) {
   const [editingPost, setEditingPost] = useState<Post | null>(null);
+  const [editMessage, setEditMessage] = useState<string>("");
 
   useEffect(() => {
     const channel = supabase
@@ -60,6 +61,7 @@ export default function PostFeed({
 
   const handleEdit = (post: Post) => {
     setEditingPost(post);
+    setEditMessage(post.message);
   };
 
   const handleEditSave = async (updatedMessage: string) => {
@@ -71,11 +73,6 @@ export default function PostFeed({
     if (error) {
       toast.error("Failed to update post.");
     } else {
-      setPosts((prev) =>
-        prev.map((p) =>
-          p.id === editingPost.id ? { ...p, message: updatedMessage } : p
-        )
-      );
       toast.success("Post updated.");
       setEditingPost(null);
     }
@@ -99,6 +96,33 @@ export default function PostFeed({
             </li>
           ))}
         </ul>
+      )}
+      {editingPost && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
+          <div className="bg-white dark:bg-zinc-900 p-6 rounded shadow max-w-md w-full">
+            <h2 className="font-bold mb-2">Edit Post</h2>
+            <textarea
+              className="w-full border rounded p-2 mb-4"
+              value={editMessage}
+              onChange={(e) => setEditMessage(e.target.value)}
+              rows={4}
+            />
+            <div className="flex gap-2 justify-end">
+              <button
+                className="px-4 py-2 rounded bg-gray-200 dark:bg-zinc-800"
+                onClick={() => setEditingPost(null)}
+              >
+                Cancel
+              </button>
+              <button
+                className="px-4 py-2 rounded bg-blue-600 text-white"
+                onClick={() => handleEditSave(editMessage)}
+              >
+                Save
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

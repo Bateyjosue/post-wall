@@ -1,6 +1,5 @@
 "use client";
 
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { useState, useEffect } from "react";
 import PostInput from "@/components/PostInput";
 import PostFeed from "@/components/PostFeed";
