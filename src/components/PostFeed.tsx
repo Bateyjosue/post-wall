@@ -12,26 +12,18 @@ type Post = {
   created_at: string;
 };
 
-export default function PostFeed() {
-  const [posts, setPosts] = useState<Post[]>([]);
-  const [loading, setLoading] = useState(true);
+export default function PostFeed({
+  posts,
+  setPosts,
+  loading,
+}: {
+  posts: Post[];
+  setPosts: React.Dispatch<React.SetStateAction<Post[]>>;
+  loading: boolean;
+}) {
   const [editingPost, setEditingPost] = useState<Post | null>(null);
 
-  // Fetch latest 50 posts
-  const fetchPosts = async () => {
-    setLoading(true);
-    const { data, error } = await supabase
-      .from("posts")
-      .select("*")
-      .order("created_at", { ascending: false })
-      .limit(50);
-    if (!error && data) setPosts(data as Post[]);
-    setLoading(false);
-  };
-
   useEffect(() => {
-    fetchPosts();
-
     const channel = supabase
       .channel("realtime:posts")
       .on(
@@ -54,7 +46,7 @@ export default function PostFeed() {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, []);
+  }, [setPosts]);
 
   const handleDelete = async (id: string) => {
     const { error } = await supabase.from("posts").delete().eq("id", id);
