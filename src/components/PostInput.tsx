@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import ReactMarkdown from "react-markdown";
 import { toast } from "sonner";
+import Image from "next/image";
 
 type Post = {
   id: string;
@@ -130,11 +131,13 @@ export default function PostInput({
         {/* Image Preview */}
         {previewUrl && (
           <div className="mt-2">
-            <img
-              src={previewUrl}
-              alt="Preview"
-              className="max-h-40 rounded border object-contain"
-            />
+            <Image
+                src={previewUrl}
+                alt="Post media"
+                width={320}
+                height={160}
+                className="max-h-64 rounded-md border object-contain"
+              />
           </div>
         )}
         {/* Share Button (below preview, green) */}
