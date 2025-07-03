@@ -3,8 +3,8 @@ import { Card } from "@/components/ui/card";
 import ReactMarkdown from "react-markdown";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { MoreVertical } from "lucide-react";
-import { useState } from "react";
 import { supabase } from "../../lib/supabaseClient";
+import Image from "next/image";
 
 type Post = {
   id: string;
@@ -23,10 +23,6 @@ function isVideo(url: string) {
 }
 
 export default function PostItem({ post, onDelete, onEdit }: { post: Post, onDelete: (id: string) => void, onEdit: (post: Post) => void }) {
-  const handleDelete = async (id: string) => {
-    await supabase.from("posts").delete().eq("id", id);
-    // Optionally, show a toast and update state
-  };
 
   return (
     <Card className="p-4 rounded-md border bg-white dark:bg-zinc-900 shadow mb-2 relative">
@@ -55,9 +51,11 @@ export default function PostItem({ post, onDelete, onEdit }: { post: Post, onDel
         {post.media_url && (
           <div className="mt-2">
             {isImage(post.media_url) ? (
-              <img
+              <Image
                 src={post.media_url}
                 alt="Post media"
+                width={320}
+                height={160}
                 className="max-h-64 rounded-md border object-contain"
               />
             ) : isVideo(post.media_url) ? (
