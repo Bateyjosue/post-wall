@@ -1,5 +1,5 @@
 "use client";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { supabase } from "../../lib/supabaseClient";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -30,6 +30,17 @@ export default function PostInput({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (file) {
+      const url = URL.createObjectURL(file);
+      setPreviewUrl(url);
+      return () => URL.revokeObjectURL(url);
+    } else {
+      setPreviewUrl(null);
+    }
+  }, [file]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFile(e.target.files?.[0] || null);
@@ -118,13 +129,11 @@ export default function PostInput({
           </div>
         )}
         {/* Image Preview */}
-        {file && file.type.startsWith("image/") && (
+        {previewUrl && (
           <div className="mt-2">
-            <Image
-              src={URL.createObjectURL(file)}
+            <img
+              src={previewUrl}
               alt="Preview"
-              width={320}
-              height={160}
               className="max-h-40 rounded border object-contain"
             />
           </div>
