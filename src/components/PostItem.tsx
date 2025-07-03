@@ -3,7 +3,6 @@ import { Card } from "@/components/ui/card";
 import ReactMarkdown from "react-markdown";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { MoreVertical } from "lucide-react";
-import { supabase } from "../../lib/supabaseClient";
 import Image from "next/image";
 
 type Post = {
