@@ -6,6 +6,16 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import ReactMarkdown from "react-markdown";
 import { toast } from "sonner";
+import Image from "next/image";
+
+type Post = {
+  id: string;
+  user_id?: string | null;
+  message: string;
+  created_at: string;
+  media_url?: string | null;
+  author_name?: string | null;
+};
 
 const MAX_LENGTH = 280;
 const BUCKET = "post-media";
@@ -13,7 +23,7 @@ const BUCKET = "post-media";
 export default function PostInput({
   onPost,
 }: {
-  onPost?: (post: any) => void;
+  onPost?: (post: Post) => void;
 }) {
   const [message, setMessage] = useState("");
   const [file, setFile] = useState<File | null>(null);
@@ -110,10 +120,12 @@ export default function PostInput({
         {/* Image Preview */}
         {file && file.type.startsWith("image/") && (
           <div className="mt-2">
-            <img
+            <Image
               src={URL.createObjectURL(file)}
               alt="Preview"
-              className="max-h-40 rounded border"
+              width={320}
+              height={160}
+              className="max-h-40 rounded border object-contain"
             />
           </div>
         )}
